@@ -1,73 +1,46 @@
+
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        my_nuxtjs_blog
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+    <h1 class="my-3">Последние записи блога</h1>
+    <div class="row">
+      <div v-for="post in posts" :key="post.slug" class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <img :src="post.image" alt="" class="card-img-top">
+            <div class="card-body">
+              <h4 class="card-title">{{ post.h1 }}</h4>
+              <div v-html="post.description" class="truncate"></div>              
+              <div class="mb-2">
+              <span v-for="tag in post.tags">
+                <nuxt-link :to="`/tags/${tag}`" class="mr-1 badge badge-info">#{{ tag }}</nuxt-link>
+              </span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <nuxt-link :to="`/posts/${post.slug}`" class="btn btn-sm btn-outline-secondary">Подробнее</nuxt-link>
+                </div>
+                <small class="text-muted">{{ post.created_at }}</small>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import axios from "axios";
+
+export default {
+  async asyncData(ctx){
+    const {data} = await axios.get(`http://127.0.0.1:8000/api/posts/`);
+    return {
+      posts: data.results,
+    }
+  }
+}
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>
+
