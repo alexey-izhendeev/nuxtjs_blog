@@ -1,10 +1,12 @@
 <template>
-  <h1>sign out</h1>
+  <div></div>
 </template>
 
 <script>
 export default {
-  name: "signout"
+  async created() {
+    await this.$auth.logout()
+  }
 }
 </script>
 
