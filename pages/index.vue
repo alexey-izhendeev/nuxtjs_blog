@@ -48,10 +48,17 @@
 
 <script>
 import axios from "axios";
+import { mapState } from 'vuex';
 
 export default {
   watchQuery: ['page'],
-  data() {
+  computed: {
+    ...mapState(['posts', 'total', 'next', 'next', 'previous', 'current_page'])
+  },
+  async fetch({store, route}) {
+    await store.dispatch('loadAllPosts', {query_page: route.query.page})
+  },
+  /*data() {
     return {
       posts: [],
       total: [],
@@ -60,6 +67,7 @@ export default {
       current_page: 0
     }
   },
+  
   async asyncData({route}){
     let page = route.query.page !== undefined ? `?page=${route.query.page}` : '';
     const {data} = await axios.get(`http://127.0.0.1:8000/api/posts/${page}`);
@@ -72,6 +80,15 @@ export default {
       next: next,
       previous: previous,
       current_page: Number(current_page)
+    }
+  },*/
+  head() {
+    return {
+      title: "Главная страница блога",
+        meta: [
+          { hid: "description", name: "description", content: "Это дискрипшн тут мы пишем текст не более 250 символов."},
+          { hid: "keywords", name: "keywords", content: "перечисляем, ключевые, слова, для, главной"}
+      ]
     }
   },
 }
